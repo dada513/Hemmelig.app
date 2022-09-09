@@ -19,6 +19,8 @@ import {
     FileButton,
     NumberInput,
     Badge,
+    Switch,
+    Grid,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
@@ -32,6 +34,7 @@ import {
     IconHeading,
     IconShare,
 } from '@tabler/icons';
+import { Prism } from '@mantine/prism';
 import { useSelector } from 'react-redux';
 
 import config from '../../config';
@@ -51,6 +54,8 @@ const Home = () => {
     const [enableFileUpload] = useState(config.get('settings.enableFileUpload', false));
     const [files, setFiles] = useState([]);
     const [ttl, setTTL] = useState(14400);
+    const [syntax, setSyntax] = useState('none');
+    const [isSyntax, setIsSyntax] = useState(false);
     const [password, setPassword] = useState('');
     const [enablePassword, setOnEnablePassword] = useState(false);
     const [allowedIp, setAllowedIp] = useState('');
@@ -98,11 +103,15 @@ const Home = () => {
         setTitle(event.target.value);
     };
 
+    const onSyntaxChange = (value) => {
+        setSyntax(value);
+    };
+
     const onMaxViewsChange = (value) => {
         setMaxViews(value);
     };
 
-    const onSelectChange = (value) => {
+    const onTTLChange = (value) => {
         setTTL(value);
     };
 
@@ -241,6 +250,141 @@ const Home = () => {
         { value: 300, label: '5 minutes' },
     ];
 
+    const syntaxValues = [
+        {
+            value: 'none',
+            label: 'none',
+        },
+        {
+            value: 'yaml',
+            label: 'yaml',
+        },
+        {
+            value: 'json',
+            label: 'json',
+        },
+        {
+            value: 'markdown',
+            label: 'markdown',
+        },
+        {
+            value: 'javascript',
+            label: 'javascript',
+        },
+        {
+            value: 'jsx',
+            label: 'jsx',
+        },
+        {
+            value: 'go',
+            label: 'go',
+        },
+        {
+            value: 'markup',
+            label: 'markup',
+        },
+        {
+            value: 'bash',
+            label: 'bash',
+        },
+        {
+            value: 'clike',
+            label: 'clike',
+        },
+        {
+            value: 'c',
+            label: 'c',
+        },
+        {
+            value: 'cpp',
+            label: 'cpp',
+        },
+        {
+            value: 'css',
+            label: 'css',
+        },
+        {
+            value: 'coffeescript',
+            label: 'coffeescript',
+        },
+        {
+            value: 'actionscript',
+            label: 'actionscript',
+        },
+        {
+            value: 'css-extr',
+            label: 'css-extr',
+        },
+        {
+            value: 'diff',
+            label: 'diff',
+        },
+        {
+            value: 'git',
+            label: 'git',
+        },
+        {
+            value: 'graphql',
+            label: 'graphql',
+        },
+        {
+            value: 'handlebars',
+            label: 'handlebars',
+        },
+        {
+            value: 'less',
+            label: 'less',
+        },
+        {
+            value: 'makefile',
+            label: 'makefile',
+        },
+        {
+            value: 'objectivec',
+            label: 'objectivec',
+        },
+        {
+            value: 'ocaml',
+            label: 'ocaml',
+        },
+        {
+            value: 'python',
+            label: 'python',
+        },
+        {
+            value: 'reason',
+            label: 'reason',
+        },
+        {
+            value: 'sass',
+            label: 'sass',
+        },
+        {
+            value: 'scss',
+            label: 'scss',
+        },
+        {
+            value: 'sql',
+            label: 'sql',
+        },
+        {
+            value: 'stylus',
+            label: 'stylus',
+        },
+        {
+            value: 'tsx',
+            label: 'tsx',
+        },
+        {
+            value: 'typescript',
+            label: 'typescript',
+        },
+        {
+            value: 'wasm',
+            label: 'wasm',
+        },
+    ];
+
     // Features allowed for signed in users only
     // This is validated from the server as well
     if (isLoggedIn) {
@@ -271,11 +415,34 @@ const Home = () => {
                 <Text size="sm" align="center">
                     {t('home.welcome')}
                 </Text>
+
+                {isSyntax && (
+                    <Prism
+                        styles={() => ({
+                            root: {
+                                fontFamily: 'Inter,sans-serif !important',
+                            },
+                        })}
+                        language={syntax}
+                        withLineNumbers
+                    >
+                        {text}
+                    </Prism>
+                )}
+
                 <Textarea
                     minRows={10}
                     maxRows={secretId ? 4 : 1000}
                     autosize
                     placeholder={t('home.maintxtarea')}
+                    label={
+                        <Switch
+                            checked={isSyntax}
+                            onChange={(event) => setIsSyntax(event.currentTarget.checked)}
+                            label={t('home.syntax')}
+                            color="yellow"
+                        />
+                    }
                     onChange={onTextareaChange}
                     value={text}
                     readOnly={inputReadOnly}
@@ -286,17 +453,25 @@ const Home = () => {
                     <TextInput
                         styles={groupMobileStyle}
                         icon={<IconHeading size={14} />}
-                        placeholder={t('home.title')}
+                        label={t('home.title')}
                         value={title}
                         onChange={onTitleChange}
                         readOnly={inputReadOnly}
+                    />
+
+                    <Select
+                        styles={groupMobileStyle}
+                        value={syntax}
+                        onChange={onSyntaxChange}
+                        data={syntaxValues}
+                        label={t('home.syntax')}
                     />
                 </Group>
 
                 <Group grow>
                     <Select
                         value={ttl}
-                        onChange={onSelectChange}
+                        onChange={onSyntaxChange}
                         data={ttlValues}
                         label={t('home.lifetime')}
                     />
