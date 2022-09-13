@@ -65,7 +65,7 @@ Have a look at the Dockerfile for a full example of how to run this application.
 
 -   `SECRET_LOCAL_HOSTNAME` Default: 0.0.0.0. - The local hostname for the fastify instance
 -   `SECRET_PORT` Default: 3000. - The port number for the fastify instance
--   `SECRET_HOST` Default: "". - Used for i.e. set cors to your domain name
+-   `SECRET_HOST` Default: "localhost". - Used for i.e. the cookie domain
 -   `SECRET_REDIS_HOST` Default: 0.0.0.0 - Override this for your redis host adress
 -   `SECRET_REDIS_PORT` Default: 6379 - The redis port number
 -   `SECRET_REDIS_TLS` Default: false - If the redis instance is using tls

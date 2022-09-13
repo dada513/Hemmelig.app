@@ -6,6 +6,8 @@ import importFastify from 'fastify';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
 import fstatic from '@fastify/static';
+import cookie from '@fastify/cookie';
+
 import jwt from './src/server/decorators/jwt.js';
 import userFeatures from './src/server/decorators/user-features.js';
 import rateLimit from './src/server/decorators/rate-limit.js';
@@ -29,9 +31,10 @@ const fastify = importFastify({
 
 // https://github.com/fastify/fastify-helmet
 fastify.register(helmet, { contentSecurityPolicy: false, crossOriginEmbedderPolicy: false });
-
 // https://github.com/fastify/fastify-cors
 fastify.register(cors, { origin: config.get('cors') });
+// https://www.npmjs.com/package/@fastify/cookie
+fastify.register(cookie);
 
 // Define decorators
 fastify.register(jwt);

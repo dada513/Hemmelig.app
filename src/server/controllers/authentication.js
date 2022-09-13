@@ -1,5 +1,6 @@
 import emailValidator from 'email-validator';
 import validator from 'validator';
+import config from 'config';
 
 import * as redis from '../services/redis.js';
 import { hash, compare } from '../helpers/password.js';
@@ -58,12 +59,13 @@ async function authentication(fastify) {
             const token = await fastify.jwt.sign(
                 {
                     username,
-                    email,
                 },
                 { expiresIn: '7d' } // expires in seven days
             );
 
-            return { token };
+            return reply
+                .setCookie('_hemmelig_jwt', token, { httpOnly: true, domain: config.get('host') })
+                .send({ token });
         }
     );
 
@@ -83,7 +85,9 @@ async function authentication(fastify) {
             { expiresIn: '7d' }
         );
 
-        return { token };
+        return reply
+            .setCookie('_hemmelig_jwt', token, { httpOnly: true, domain: config.get('host') })
+            .send({ token });
     });
 
     fastify.get(
